@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Getting started with Boto 3 &#8212; Getting started with Boto 3 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../_static/pydoctheme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Changelog" href="../changes.html" />
+    <link rel="prev" title="Description" href="../readme.html" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <link rel="shortcut icon" type="image/png" href="../_static/favicon.png" />
+    <meta name="viewport" content="width=device-width,initial-scale=0.8">
+    
+    
+
+  </head><body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="responsive-menu"><a href="#sidebar-anchor" title="Navigation">&#9776;</a></li>
+        <li><a href="../index.html">Getting started with Boto 3-0.1</a> &#187;</li> 
+      </ul>
+    </div>
+    
+        <div class="badge">
+            <a href="https://github.com/laurent-laporte-pro/getting-started-with-boto-3">Fork me on GitHub</a>
+            <img src="../_static/right-red@2x.png">
+        </div>
+    
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started-with-boto-3">
+<h1>Getting started with Boto 3<a class="headerlink" href="#getting-started-with-boto-3" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="presentation">
+<h2>Presentation<a class="headerlink" href="#presentation" title="Permalink to this headline">¶</a></h2>
+<p>Quoting the <a class="reference external" href="https://boto3.readthedocs.io">Boto 3 Documentation</a>:
+Boto is the Amazon Web Services (AWS) SDK for Python, which allows Python developers to write software
+that makes use of Amazon services like S3 and EC2. Boto provides an easy to use, object-oriented API
+as well as low-level direct service access.</p>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>To use Boto 3, you should set up authentication credentials.</p>
+<p>You can create the credential files in your home directory. Its location is <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials:</span></code>:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[default]</span>
+<span class="na">aws_access_key_id</span> <span class="o">=</span> <span class="s">YOUR_ACCESS_KEY</span>
+<span class="na">aws_secret_access_key</span> <span class="o">=</span> <span class="s">YOUR_SECRET_KEY</span>
+</pre></div>
+</div>
+<p>And set the region in <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code>:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[default]</span>
+<span class="na">region</span><span class="o">=</span><span class="s">us-east-1</span>
+</pre></div>
+</div>
+<p>This sets up credentials for the default profile as well as a default region to use when creating connections.</p>
+</div>
+<div class="section" id="using-amazon-glacier">
+<h2>Using Amazon Glacier<a class="headerlink" href="#using-amazon-glacier" title="Permalink to this headline">¶</a></h2>
+<p>In the context of the archiving workflow, we use the <strong>Glacier</strong> service (but not the <strong>S3</strong>).</p>
+<p>The documentation of the Glacier service is available in the <a class="reference external" href="https://boto3.readthedocs.io/en/latest/reference/services/glacier.html">Boto 3 Docs - Glacier</a></p>
+<div class="section" id="list-the-vaults">
+<h3>List the vaults<a class="headerlink" href="#list-the-vaults" title="Permalink to this headline">¶</a></h3>
+<p>To list the vaults, you can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">boto3</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">glacier</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s1">&#39;glacier&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">vault</span> <span class="ow">in</span> <span class="n">glacier</span><span class="o">.</span><span class="n">vaults</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">vault</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201407&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201408&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201409&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201410&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201411&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201412&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201501&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201502&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201503&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201504&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201505&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201506&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201507&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201508&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201509&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201510&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201511&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201512&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201601&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201602&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201603&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201604&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201605&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201606&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201607&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;201608&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;Archivage_Cloud&#39;)</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=u&#39;archivage-test&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="read-the-vault-attributes">
+<h3>Read the vault attributes<a class="headerlink" href="#read-the-vault-attributes" title="Permalink to this headline">¶</a></h3>
+<p>To read the attributes of a vault:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span> <span class="o">=</span> <span class="n">glacier</span><span class="o">.</span><span class="n">Vault</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;201407&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">creation_date</span>
+<span class="go">u&#39;2014-07-30T15:34:14.204Z&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">last_inventory_date</span>
+<span class="go">u&#39;2014-08-01T14:30:07.697Z&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">number_of_archives</span>
+<span class="go">28</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">size_in_bytes</span>
+<span class="go">311490089</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">vault_arn</span>
+<span class="go">u&#39;arn:aws:glacier:us-east-1:033342878933:vaults/201407&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">vault_name</span>
+<span class="go">&#39;201407&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-a-new-vault">
+<h3>Create a new vault<a class="headerlink" href="#create-a-new-vault" title="Permalink to this headline">¶</a></h3>
+<p>To create a new vault:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span> <span class="o">=</span> <span class="n">glacier</span><span class="o">.</span><span class="n">create_vault</span><span class="p">(</span><span class="n">vaultName</span><span class="o">=</span><span class="s2">&quot;test-201610&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span>
+<span class="go">glacier.Vault(account_id=u&#39;-&#39;, name=&#39;test-201610&#39;)</span>
+</pre></div>
+</div>
+<p>Or:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span> <span class="o">=</span> <span class="n">glacier</span><span class="o">.</span><span class="n">Vault</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;test-201611&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-an-empty-vault">
+<h3>Delete an empty vault<a class="headerlink" href="#delete-an-empty-vault" title="Permalink to this headline">¶</a></h3>
+<p>To delete an empty vault:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span> <span class="o">=</span> <span class="n">glacier</span><span class="o">.</span><span class="n">Vault</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;test-201610&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>If the vault is not empty, you’ll get an exception:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">glacier</span><span class="o">.</span><span class="n">Vault</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;archivage-test&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">botocore.exceptions.ClientError</span>: <span class="n">An error occurred (InvalidParameterValueException) when calling \</span>
+<span class="go">the DeleteVault operation: Vault not empty or recently written to: \</span>
+<span class="go">arn:aws:glacier:us-east-1:033342878933:vaults/archivage-test</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="list-the-archives-inventory">
+<h3>List the archives (inventory)<a class="headerlink" href="#list-the-archives-inventory" title="Permalink to this headline">¶</a></h3>
+<p>To list the archives stored in a vault, you can do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">vault</span> <span class="o">=</span> <span class="n">glacier</span><span class="o">.</span><span class="n">Vault</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;201407&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>➢&nbsp;Initiate vault inventory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">job</span> <span class="o">=</span> <span class="n">vault</span><span class="o">.</span><span class="n">initiate_inventory_retrieval</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">job</span>
+<span class="go">glacier.Job(account_id=&#39;-&#39;, vault_name=&#39;201407&#39;,</span>
+<span class="go">            id=&#39;m-DLDuNO52qrwBiZuPPedUk0j5kuD8vXywiZAuNKOj6V1Khn_8pQcpQLNks9B5qgDwnap_iE0gDVuoBjAoalPSMmxgt8&#39;)</span>
+</pre></div>
+</div>
+<p><strong>Wait at least 4 hours…</strong></p>
+<p>➢&nbsp;To get information about an initiated job:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pprint</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;glacier&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On a pending job:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">describe_job</span><span class="p">(</span><span class="n">vaultName</span><span class="o">=</span><span class="s2">&quot;201407&quot;</span><span class="p">,</span> <span class="n">jobId</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+<span class="go">{u&#39;Action&#39;: u&#39;InventoryRetrieval&#39;,</span>
+<span class="go"> u&#39;Completed&#39;: False,</span>
+<span class="go"> u&#39;CreationDate&#39;: u&#39;2016-09-01T09:16:45.612Z&#39;,</span>
+<span class="go"> u&#39;InventoryRetrievalParameters&#39;: {u&#39;Format&#39;: u&#39;JSON&#39;},</span>
+<span class="go"> u&#39;JobId&#39;: u&#39;m-DLDuNO52qrwBiZuPPedUk0j5kuD8vXywiZAuNKOj6V1Khn_8pQcpQLNks9B5qgDwnap_iE0gDVuoBjAoalPSMmxgt8&#39;,</span>
+<span class="go"> &#39;ResponseMetadata&#39;: {&#39;HTTPHeaders&#39;: {&#39;content-length&#39;: &#39;623&#39;,</span>
+<span class="go">                                      &#39;content-type&#39;: &#39;application/json&#39;,</span>
+<span class="go">                                      &#39;date&#39;: &#39;Thu, 01 Sep 2016 09:41:32 GMT&#39;,</span>
+<span class="go">                                      &#39;x-amzn-requestid&#39;: &#39;J9msS0OWqVlxdZWHRoh1k2cpZg39pUUjvjLXjD0SCoZM6N4&#39;},</span>
+<span class="go">                      &#39;HTTPStatusCode&#39;: 200,</span>
+<span class="go">                      &#39;RequestId&#39;: &#39;J9msS0OWqVlxdZWHRoh1k2cpZg39pUUjvjLXjD0SCoZM6N4&#39;},</span>
+<span class="go"> u&#39;StatusCode&#39;: u&#39;InProgress&#39;,</span>
+<span class="go"> u&#39;VaultARN&#39;: u&#39;arn:aws:glacier:us-east-1:033342878933:vaults/201407&#39;}</span>
+</pre></div>
+</div>
+<p>On a completed job:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">describe_job</span><span class="p">(</span><span class="n">vaultName</span><span class="o">=</span><span class="s2">&quot;201407&quot;</span><span class="p">,</span> <span class="n">jobId</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+<span class="go">{u&#39;Action&#39;: u&#39;InventoryRetrieval&#39;,</span>
+<span class="go"> u&#39;Completed&#39;: True,</span>
+<span class="go"> u&#39;CompletionDate&#39;: u&#39;2016-09-01T13:15:48.835Z&#39;,</span>
+<span class="go"> u&#39;CreationDate&#39;: u&#39;2016-09-01T09:16:45.612Z&#39;,</span>
+<span class="go"> u&#39;InventoryRetrievalParameters&#39;: {u&#39;Format&#39;: u&#39;JSON&#39;},</span>
+<span class="go"> u&#39;InventorySizeInBytes&#39;: 9011,</span>
+<span class="go"> u&#39;JobId&#39;: u&#39;m-DLDuNO52qrwBiZuPPedUk0j5kuD8vXywiZAuNKOj6V1Khn_8pQcpQLNks9B5qgDwnap_iE0gDVuoBjAoalPSMmxgt8&#39;,</span>
+<span class="go"> &#39;ResponseMetadata&#39;: {&#39;HTTPHeaders&#39;: {&#39;content-length&#39;: &#39;650&#39;,</span>
+<span class="go">                                      &#39;content-type&#39;: &#39;application/json&#39;,</span>
+<span class="go">                                      &#39;date&#39;: &#39;Thu, 01 Sep 2016 13:38:24 GMT&#39;,</span>
+<span class="go">                                      &#39;x-amzn-requestid&#39;: &#39;Rh7kT9rgw7LbuAMK3j50ffpsQ-TN0836_oau2aVODuo6QcM&#39;},</span>
+<span class="go">                      &#39;HTTPStatusCode&#39;: 200,</span>
+<span class="go">                      &#39;RequestId&#39;: &#39;Rh7kT9rgw7LbuAMK3j50ffpsQ-TN0836_oau2aVODuo6QcM&#39;},</span>
+<span class="go"> u&#39;StatusCode&#39;: u&#39;Succeeded&#39;,</span>
+<span class="go"> u&#39;StatusMessage&#39;: u&#39;Succeeded&#39;,</span>
+<span class="go"> u&#39;VaultARN&#39;: u&#39;arn:aws:glacier:us-east-1:033342878933:vaults/201407&#39;}</span>
+</pre></div>
+</div>
+<p>➢&nbsp;To list the current jobs for a vault:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">list_jobs</span><span class="p">(</span><span class="n">vaultName</span><span class="o">=</span><span class="s2">&quot;201407&quot;</span><span class="p">))</span>
+<span class="go">{u&#39;JobList&#39;: [{u&#39;Action&#39;: u&#39;InventoryRetrieval&#39;,</span>
+<span class="go">               u&#39;Completed&#39;: False,</span>
+<span class="go">               u&#39;CreationDate&#39;: u&#39;2016-09-01T09:16:45.612Z&#39;,</span>
+<span class="go">               u&#39;InventoryRetrievalParameters&#39;: {u&#39;Format&#39;: u&#39;JSON&#39;},</span>
+<span class="go">               u&#39;JobId&#39;: u&#39;m-DLDuNO52qrwBiZuPPedUk0j5kuD8vXywiZAuNKOj6V1Khn_8pQcpQLNks9B5qgDwnap_iE0gDVuoBjAoalPSMmxgt8&#39;,</span>
+<span class="go">               u&#39;StatusCode&#39;: u&#39;InProgress&#39;,</span>
+<span class="go">               u&#39;VaultARN&#39;: u&#39;arn:aws:glacier:us-east-1:033342878933:vaults/201407&#39;}],</span>
+<span class="go"> &#39;ResponseMetadata&#39;: {&#39;HTTPHeaders&#39;: {&#39;content-length&#39;: &#39;651&#39;,</span>
+<span class="go">                                      &#39;content-type&#39;: &#39;application/json&#39;,</span>
+<span class="go">                                      &#39;date&#39;: &#39;Thu, 01 Sep 2016 09:51:44 GMT&#39;,</span>
+<span class="go">                                      &#39;x-amzn-requestid&#39;: &#39;r7Yf_JWvED327F-5N0a5gv_191wWIih0cfGhXIxhbshjP2k&#39;},</span>
+<span class="go">                      &#39;HTTPStatusCode&#39;: 200,</span>
+<span class="go">                      &#39;RequestId&#39;: &#39;r7Yf_JWvED327F-5N0a5gv_191wWIih0cfGhXIxhbshjP2k&#39;}}</span>
+</pre></div>
+</div>
+<p>➢&nbsp;To download a job output:</p>
+<ul class="simple">
+<li>If your job is not completed:</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">job</span><span class="o">.</span><span class="n">get_output</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">botocore.exceptions.ClientError</span>: <span class="n">An error occurred (InvalidParameterValueException) when calling \</span>
+<span class="go">the GetJobOutput operation: The job is not currently available for download: \</span>
+<span class="go">m-DLDuNO52qrwBiZuPPedUk0j5kuD8vXywiZAuNKOj6V1Khn_8pQcpQLNks9B5qgDwnap_iE0gDVuoBjAoalPSMmxgt8</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>If your job is completed:</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_output</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>By default the inventory list is returned as a JSON body.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+<span class="go">{&#39;ResponseMetadata&#39;: {&#39;HTTPHeaders&#39;: {&#39;accept-ranges&#39;: &#39;bytes&#39;,</span>
+<span class="go">                                      &#39;content-length&#39;: &#39;9011&#39;,</span>
+<span class="go">                                      &#39;content-type&#39;: &#39;application/json&#39;,</span>
+<span class="go">                                      &#39;date&#39;: &#39;Thu, 01 Sep 2016 13:42:41 GMT&#39;,</span>
+<span class="go">                                      &#39;x-amzn-requestid&#39;: &#39;o8YRRnkj9FrrLAIOzUrLL9cRarNadmIXc1WPHUy4tBsJ9ho&#39;},</span>
+<span class="go">                      &#39;HTTPStatusCode&#39;: 200,</span>
+<span class="go">                      &#39;RequestId&#39;: &#39;o8YRRnkj9FrrLAIOzUrLL9cRarNadmIXc1WPHUy4tBsJ9ho&#39;},</span>
+<span class="go"> u&#39;acceptRanges&#39;: &#39;bytes&#39;,</span>
+<span class="go"> u&#39;body&#39;: &lt;botocore.response.StreamingBody object at 0x1a37950&gt;,</span>
+<span class="go"> u&#39;contentType&#39;: &#39;application/json&#39;,</span>
+<span class="go"> u&#39;status&#39;: 200}</span>
+</pre></div>
+</div>
+<p>The Content-Type is <code class="docutils literal notranslate"><span class="pre">application/json</span></code>, so, to get the inventory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">json</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inventory</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">inventory</span><span class="p">)</span>
+<span class="go">{u&#39;ArchiveList&#39;: [{u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;TliOiBR45aBgpBm-YXqTYCI51c_lcS0yjBoTS-7QrSCJmcZTyfVU1AyiOY2jtD2-P8YbuEXzkSGPq9sT9maCHZVSbNgn581PaAMFQu41p9n8b5nS9sqQKj1nxF58WgZwt1_5RxaEhg&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:34:15Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;vr7J3baZqNDufzeSYZm4EtP3Ouk6HDLL3-HAdSOul-p-kId-IPHjyp7M-uPZJnTx4hPjKQp00t2Lkk4l6JoFlxlTxapxcdTufllFttzyKYXTm5SWUMb9C06e9pJV0vkWfGl6FL9IYg&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:37:27Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;Ahm87egVaRu6M86TdbfDlamFxAN7OFSgkLdNcqQLDDHKIWY7vX5gO-_tui1sgE_VBkXm8CjQKL5wbzSi6UO2VL1hJzRlZ6F2PadJ1S89sVFpuIqhEDXxpwt7Tdeyk6EFweg6us8jnw&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:40:07Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;yoNTc3V_E_83FTNXdntiiaJoQH-JRlH-3Jgm0RNrMXPXRAMxw1_KB47wDGnG0nDJz8obUjS-2h818VFk_KWtJ7-YleDYt1-2t1sQlifFqAv3DXnT5TfwYmgdIw107NFroRYtZ5yCcw&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:40:44Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;vdPtNLg8kyTH7hWsHcBCazt76ISTFkSNU0j1f9Vxfzn3-ps4MyhY4jmSI5K50Og7llwYakp5fXLK3ove-2GFpdvMSZMGz3Dn7VX9slXRhYuWaGHNYYaW8H0PfZfaLzK_9VK_xkJ4Yw&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:43:41Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;j9iPZTq8b35uuMoKxkvEwH6jOWpB6WosrTjH-kXUevRpGgGDiBuz7JpROSx6XkkbIxkHLrb5bk4DixTDFLBDesmwFdGgxa38Dbak-1Z8ZweBoVMjV7XerYZAdWfvknQ1maU5lsYR_Q&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:45:15Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;nleCzqbI3BWMH9ar97I77Rj3QxC2Dpj4ErrsvYZ0kMhf9z7fG7YpsfsqeU6gN_LyEX8y7-gAUpPjqC6Ev2EJt-Kkcnz7Ayq5Ha6-Ce35h7aneMNF_flu7qgXCFlN92_4asrXCzc5ZQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:47:57Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;/jcrtra/archivage/traitement/tmp/99999991.ok.checksum&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;CnWsDxY6YmjmIIjkKYKPh3TTRsnok1dDR9ZZj9rTryXVbtVMxRseLXETzm3B4BG7ZbCHoPenkjg-tX-OoasVMxVbW9J6BD54ZlmV2dokHJMHdpA6RfzRt5VoBnZYCmwxkoGmQqEBRQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:53:06Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;F-uMiX5ipSxryN5FMa46zQ8KH2IZPmeZEa1zqRy2Yt_dVB9Y84m-vvfElDReg1pOWxLXjVJK98neoqDhNXA4tnBx7_XaqkbtnaHNLR5hFSn_KgBM8Y5TsUXQ4o5QJ605XW2sarSJDg&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:53:51Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;6EVIbFcFIjxOYeRKGoRfr5eInbQiu5GwAG99KglWz1DevxKy8DY2HMvQAT4mvHBu1Aq7YCfalVp8zA3KSguK7Ly9On6LByp5Ehl9AKSh2zhuZpu_TiZBLTQVzUhCODSjvw86CQ-ZrQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:55:45Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;pQ-fc_cSgMtK6ytDRYkE0kKXpmN6towkLKZbuCLFr9V8I3tIN2i-oGGz0XtAfUMsAXpO95ElCleaJetI4Apu-Nb3qiva_UhkZPOBnFsmghP0LP1FBPkXgrE3AUzZADhMB4oDGfnZ9w&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:56:11Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;KKB6c76XFFX9UItRnBVdmsvVcKRtFMm_lLDT3g0dCNp_9zZlNdZR4Hh8KkTWgbmHxTCpLDxmLr2CLx02A3zITk5zcr0Fi0ZbMn7ULF7kG5apNX1m7ZtC-7SscXfXjQMfI0e0Dfy5UQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T15:59:35Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;ypZYe-Wl1A39HmV0l1Rvkj56MStB8ohDZ5RjtOZyxZBsM4iQbCYYKjeYDtNF3kt-7q-VTRoA99_iwZgQI4vZ98SseyvbTuf0j4ZqVjDvl7z-FZnf6iKuWyNQz-yiVnnZNybnlNNwew&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-30T16:00:23Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;RESULT&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;smO4CbU_N3TE_j5yh0AXVtMeoiqyMypImZEJAMDb1adkfMntVHK5qYEjdkNJWSIJOjsOl4rIqJFGhGHz85Mp7OyvwHJ_DNczXxtYp62DIEhmQxFtzx3MWMutQtI5vjkHcoot3UOc5Q&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T09:16:55Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 1},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;RESULT&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;woDx6QJYc5rQSgsUL9YcpMdXMjK-3WQJ9ToAvgpvhwfhTG4fMeJRMPUXW5sGl-NJKe-l23q3hY81BOA9GCfXnjaLgnEtCr0vsnye3DyvpV6iS4ZaT7GvRyOADWMd6tTufyq4-76T7A&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T09:33:03Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 1},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;RESULT&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;_BlyqsOGvNPjTXRiMa8fruzl_HHRp6lJad_KPGA3b4vEm8MyzymAwsR4lsH0QZq--13aOCJlknI6_UWguFbs0GA6JxDzptIX0RqKXLS-KwMhAEwCE23jyegargNO2x_T2BtP7Ddm2A&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T09:44:00Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 1},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;RESULT&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;q4qW-wtiOdZXDnpLaLDSvgODp69kpmi8u3QBV1tNU4Cj7gKi2jj4jnVAdSqoNUX5S2kzirWCEET5VXQ7iC8ijR-SBcf-QByNtFcJj8JH3CHDD8ejclYvhpagBhcwfoiPXZ1ksppKWw&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T09:44:55Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 1},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;RESULT&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;snqZ0rleoi9uQMhWq-UcitA9tQBKTDq7RLP_IeHA9FyK5B4lfPYW2_AyItjNWtYlNZ3LVGsbvVOHsVpJTU7dz1PVX9FVmRkWXpARMzTaQeoROXSZdrUR_ppurFLqKFYsaUp9ADIdFg&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T09:45:40Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 1},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;3lIWPB08rS12FS13oZgIEdaEF2F8KYtmNvFTUWLO_5NLgMuQ5SOhYVF6UHCM2ihjrQ-5wIiOpEOsDumiZbr-eHSSQoEZiNNPZS-Yqn7AgUD73Tt2qSPNc9zOwnzrJ2b_TS-rBS7FHQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T12:33:50Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;7214bedef670c311afc1242e5feddb09d4b940b201576a192626bee57e256f3a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 200},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;vpaaevdhxHPgIYK9a6MuYbuoo5g1qWJ9c5MbFJfdiohNELua_tcbOMnfwd2lkQAX90I9Xfti214RrQvcBa8rxB-gyEURAx0wl_MfPJu_aARzkDnig6WkOiC64dZlHFyeQRiD4Vvi6g&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T12:36:10Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ac7de61d6dcf6a17e53981fc934b2ff0637a05326a4107471c6d86757f5ee55a&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 217},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;sCzpAtDbm4E8YjFyYbEZJecKTOpZD1IvtzmL2aLny3DjPVHy6maYX0N9gmaJcBrqG-yk-lkvau-2W2YPTW5Kh6j-J_gjuVnj1yrUSUbVpmFJft9jKOJBfRQNsHFRaJIEquI58VinbQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T13:02:41Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;59bfdd7eca767778ae79cc41be6ecc45ad969c87c02afdf95a1b42a20f67fc8f&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 195},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;ar.txt&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;7mbgi9tH6hs_bPHXTZXWF11F16Ew7wGiHyLmlE6vvV307Fs8Z7g7Ze9E6q3aM2hSK9B98lmfrivZTYlUvCAMbOXvR6nhKcUMhbLv7HguAkAaVUYGEGCuz4yMIm03AzPuNX0vMR78-g&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T13:26:55Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;ad24f6d0197057374526ea99beef5c099287667a930a84df3715298d23fa3e78&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 62},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;AWPPUj_I79TgXiW351HmkLTTZfXFcNt8OltqTRzvIdjBcLxUtHGBisPzfQDiMd1-ujenUcBIKZ0g9gXM8NEr1UL4Lg3dmHpt_6GQ8q88PGGiJajPuHH2d5-wy3W-hdRGNT-Wabmdrw&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T15:19:01Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;6d97f0399218712bb2a545daf3668ff80b58b02d9acc639b528bbeb34f9d5171&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 87226186},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;jp-mwgd-j_FiBVMo9_K2W1AIx21x86cqKfMOxVqiI6k_9RmCdMVarr3WRufS0wkw7LQxWZhJGXhbTgFt6fLdSm3J-yyxhxQUX_HtRjkzeIGYjU6JRhT4WZr8TkL3kxALeqZQ00Rwzg&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T15:45:08Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;83ce82671e7157354230ce72c3b182ec3c906ca856108cb7b035d71fc84ce7c8&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 94786093},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;i_mViix-T3dTJDi59zMftZzqyxU2kVBNwGmUwk6GjpV38Rym2nB7iLJAfh3gbaXna12PvOqb96LeCjrdvKQe0RpNO3Xb8RsBvTVj2YvSM9LcGpBMYBxCJKIxX6jx4fxeqYvsCM_naQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T15:58:55Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;b06228db50d176226c444ea801d894082666286bbafdbae85cd9d85ae32d9c6b&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 91765322},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;jYHe3odau2xwjdirD7CLk8nMiTU79NKpPq0mBbDLRS49lO27ZYextSKvTXeULHhwHC8IPWBvcagu29r1NgoqdNYyH_1m-x12y7vTfq3MgdyCspEJZ4qv3k-CJZVAmtQvUGT6-Jq3-g&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-07-31T16:08:25Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;d3989acb87b806146702bdd1a96076d6ae8bfb14819547c9d33012f1e61f0748&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 36790798},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;TEST-AR_18_10_2013.log&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;bZPFp4S1Cz-B8uIB4FtGs63eia9uOlhN7nm9H96YNtErb5N28UfCZmPPUoI6BtCC80YxQJ6EUExGZcd6eLQS5GS-8O9cTOH8W65s7psEqSTfGYDpybUUIWx_A-5OYo1LdqfnQKSIgQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-08-01T07:52:40Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;17857f630ab0704ad0e185d8864d23903c4134c9d04505ea899f9ea2db9e5bb1&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 343},</span>
+<span class="go">                  {u&#39;ArchiveDescription&#39;: u&#39;TEST-AR_18_10_2013_cheminfull.log&#39;,</span>
+<span class="go">                   u&#39;ArchiveId&#39;: u&#39;waVwXa3jgzAERIghV17zM4rlqVjArVH_rm9I67UZDbBYxWlGIrMuE31yrX534IhgzX7iH-XiUVgpOCRKmY7cw0Yl1-Lq5eUSlRkymIuDrG8vGecMuNs_qeTHKqBgpRX2Pv4IishPfQ&#39;,</span>
+<span class="go">                   u&#39;CreationDate&#39;: u&#39;2014-08-01T07:54:08Z&#39;,</span>
+<span class="go">                   u&#39;SHA256TreeHash&#39;: u&#39;17857f630ab0704ad0e185d8864d23903c4134c9d04505ea899f9ea2db9e5bb1&#39;,</span>
+<span class="go">                   u&#39;Size&#39;: 343}],</span>
+<span class="go"> u&#39;InventoryDate&#39;: u&#39;2014-08-01T14:30:07Z&#39;,</span>
+<span class="go"> u&#39;VaultARN&#39;: u&#39;arn:aws:glacier:us-east-1:033342878933:vaults/201407&#39;}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="upload-an-archive">
+<h3>Upload an archive<a class="headerlink" href="#upload-an-archive" title="Permalink to this headline">¶</a></h3>
+<p>First, create an archive:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">shutil</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_name</span>
+<span class="go">&#39;/DATA_raid/llaporte/workspace/my_archive&#39;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">arch_path</span> <span class="o">=</span> <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="n">base_name</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">arch_path</span>
+<span class="go">&#39;/DATA_raid/llaporte/workspace/my_archive.zip&#39;</span>
+</pre></div>
+</div>
+<p>To upload an archive, open the file in binary mode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">io</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">arch_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">archive</span> <span class="o">=</span> <span class="n">vault</span><span class="o">.</span><span class="n">upload_archive</span><span class="p">(</span><span class="n">archiveDescription</span><span class="o">=</span><span class="s2">&quot;Was in: &quot;</span> <span class="o">+</span> <span class="n">arch_path</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="n">fd</span><span class="p">)</span>
+<span class="gp">...</span>
+</pre></div>
+</div>
+<p>You get the archive instance with a archive ID.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">archive</span>
+<span class="go">glacier.Archive(account_id=&#39;-&#39;,</span>
+<span class="go">vault_name=&#39;test-201609&#39;,</span>
+<span class="go">id=&#39;_V2e8LSh0nHhgaRslckF2Sxs4C22Bjw7Q05DIa4X_4V5LcanzfG3O5LnWiKGMPehK_Wi-7q0gLZ_pTn3XzijFW2aHWSVtBJpKmEhuFanZCsVhwFtys6dP-zFlKVh0PxLhbx8m_THmw&#39;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="delete-an-archive">
+<h3>Delete an archive<a class="headerlink" href="#delete-an-archive" title="Permalink to this headline">¶</a></h3>
+<p>To delete an archive:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">archive</span> <span class="o">=</span> <span class="n">glacier</span><span class="o">.</span><span class="n">Archive</span><span class="p">(</span><span class="n">account_id</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="n">vault_name</span><span class="o">=</span><span class="s1">&#39;test-201609&#39;</span><span class="p">,</span>
+<span class="gp">... </span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;_V2e8LSh0nHhgaRslckF2Sxs4C22Bjw7Q05DIa4X_4V5LcanzfG3O5LnWiKGMPehK_Wi-7q0gLZ_pTn3XzijFW2aHWSVtBJpKmEhuFanZCsVhwFtys6dP-zFlKVh0PxLhbx8m_THmw&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">archive</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="download-an-archive-retrieval">
+<h3>Download an archive (retrieval)<a class="headerlink" href="#download-an-archive-retrieval" title="Permalink to this headline">¶</a></h3>
+<p>This operation initiates a job to retrieve an archive.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">job</span> <span class="o">=</span> <span class="n">archive</span><span class="o">.</span><span class="n">initiate_archive_retrieval</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Wait at least 4 hours…</strong></p>
+<p>➢&nbsp;To get information about an initiated job:</p>
+<p>On a pending job:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pprint</span><span class="o">.</span><span class="n">pprint</span><span class="p">(</span><span class="n">client</span><span class="o">.</span><span class="n">describe_job</span><span class="p">(</span><span class="n">vaultName</span><span class="o">=</span><span class="n">vault</span><span class="o">.</span><span class="n">vault_name</span><span class="p">,</span> <span class="n">jobId</span><span class="o">=</span><span class="n">job</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+<span class="go">{u&#39;Action&#39;: u&#39;ArchiveRetrieval&#39;,</span>
+<span class="go"> u&#39;ArchiveId&#39;: u&#39;TgCPA9cpYEGWVo6-_TDVqkHeeA7g_6opDeu2KZv_6GVf98sOWqwyVca5sxOmz6k--yegDNONmbO-iR-hnMbgeESA5T6w_Fs2N11YoqgX7FW-Rtovl3KXkbwUjrTTj9bQUlFVN1LlXw&#39;,</span>
+<span class="go"> u&#39;ArchiveSHA256TreeHash&#39;: u&#39;983707d8d4bd9527c538ceee061cae3bd5a6306d7700306271c8e8b9a963c460&#39;,</span>
+<span class="go"> u&#39;ArchiveSizeInBytes&#39;: 2132743,</span>
+<span class="go"> u&#39;Completed&#39;: False,</span>
+<span class="go"> u&#39;CreationDate&#39;: u&#39;2016-09-01T15:03:48.365Z&#39;,</span>
+<span class="go"> u&#39;JobId&#39;: u&#39;vJo5-KLs3G5-JgWSw2IQAmbC4qKaOVtlXwUBdBDLhcQA1bNT7z0_RnffszPmpEGq8ErWuM_PWB8yK9wBTQsQOyzJokNW&#39;,</span>
+<span class="go"> &#39;ResponseMetadata&#39;: {&#39;HTTPHeaders&#39;: {&#39;content-length&#39;: &#39;824&#39;,</span>
+<span class="go">                                      &#39;content-type&#39;: &#39;application/json&#39;,</span>
+<span class="go">                                      &#39;date&#39;: &#39;Thu, 01 Sep 2016 15:04:18 GMT&#39;,</span>
+<span class="go">                                      &#39;x-amzn-requestid&#39;: &#39;jyJ7IqXP8SDZ9wxYMa21vhfZ_F-0WjTZN-m-Y_UR2Pqjgyc&#39;},</span>
+<span class="go">                      &#39;HTTPStatusCode&#39;: 200,</span>
+<span class="go">                      &#39;RequestId&#39;: &#39;jyJ7IqXP8SDZ9wxYMa21vhfZ_F-0WjTZN-m-Y_UR2Pqjgyc&#39;},</span>
+<span class="go"> u&#39;RetrievalByteRange&#39;: u&#39;0-2132742&#39;,</span>
+<span class="go"> u&#39;SHA256TreeHash&#39;: u&#39;983707d8d4bd9527c538ceee061cae3bd5a6306d7700306271c8e8b9a963c460&#39;,</span>
+<span class="go"> u&#39;StatusCode&#39;: u&#39;InProgress&#39;,</span>
+<span class="go"> u&#39;VaultARN&#39;: u&#39;arn:aws:glacier:us-east-1:033342878933:vaults/test-201609&#39;}</span>
+</pre></div>
+</div>
+<p>➢&nbsp;To download a job output:</p>
+<ul class="simple">
+<li>If your job is not completed:</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">job</span><span class="o">.</span><span class="n">get_output</span><span class="p">()</span>
+<span class="gt">Traceback (most recent call last):</span>
+  <span class="c">...</span>
+<span class="gr">botocore.exceptions.ClientError</span>: <span class="n">An error occurred (InvalidParameterValueException) when calling \</span>
+<span class="go">the GetJobOutput operation: The job is not currently available for download: \</span>
+<span class="go">vJo5-KLs3G5-JgWSw2IQAmbC4qKaOVtlXwUBdBDLhcQA1bNT7z0_RnffszPmpEGq8ErWuM_PWB8yK9wBTQsQOyzJokNW</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>If your job is completed:</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">response</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">get_output</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>By default the inventory list is returned as the following JSON body.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+    <a id="sidebar-anchor"></a>
+    
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo-training-128.png" alt="Logo"/>
+            </a></p>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script><h3><a href="../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">Description</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting started with Boto 3</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#presentation">Presentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-amazon-glacier">Using Amazon Glacier</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changes.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../changes.html" title="Changelog"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../readme.html" title="Description"
+             accesskey="P">previous</a> |</li>
+      </ul>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2018, Laurent LAPORTE.
+      Last updated on 2018-10-08.
+    </div>
+  </body>
+</html>
