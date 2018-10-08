@@ -2,7 +2,7 @@ Description
 ===========
 
 .. _Sphinx: http://www.sphinx-doc.org
-.. _virtualenv: https://virtualenv_.pypa.io
+.. _virtualenv: https://virtualenv.pypa.io
 
 Small tutorial to demonstrate the Boto3 usage in order to work with Amazon Glacier
 
